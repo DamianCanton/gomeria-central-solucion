@@ -18,16 +18,16 @@ const SERVICE_OPTIONS = [
 
 const InputField = ({ label, icon: Icon, ...props }) => (
   <div className="space-y-1">
-    <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">
+    <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 ml-1">
       {label}
     </label>
     <div className="relative group">
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-red-500 transition-colors">
         <Icon size={18} />
       </div>
       <input
         {...props}
-        className="w-full pl-10 pr-4 py-3 bg-slate-50 border-none rounded-xl text-slate-900 font-medium placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 transition-all"
+        className="w-full pl-10 pr-4 py-3 bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 rounded-xl text-neutral-900 dark:text-white font-medium placeholder:text-neutral-400 focus:ring-2 focus:ring-red-500 transition-all"
       />
     </div>
   </div>
@@ -119,7 +119,7 @@ export function ReceptionForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6 space-y-5 transition-colors duration-300"
+      className="bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-700 p-6 space-y-5 transition-colors duration-300"
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -127,12 +127,12 @@ export function ReceptionForm({
             className={`w-10 h-10 rounded-full flex items-center justify-center ${
               initialData
                 ? "bg-amber-100 text-amber-600"
-                : "bg-blue-100 text-blue-600"
+                : "bg-red-100 text-red-600"
             }`}
           >
             {initialData ? <Save size={24} /> : <PlusCircle size={24} />}
           </div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
             {initialData ? "Editar Orden" : "Nueva Orden"}
           </h2>
         </div>
@@ -140,7 +140,7 @@ export function ReceptionForm({
           <button
             type="button"
             onClick={onCancel}
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition"
+            className="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-full transition"
           >
             <X size={20} />
           </button>
@@ -173,22 +173,22 @@ export function ReceptionForm({
       />
 
       <div className="space-y-2">
-        <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">
+        <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 ml-1">
           Trabajos Preestablecidos
         </label>
         <div className="grid grid-cols-2 gap-2">
           {SERVICE_OPTIONS.map((service) => (
             <label
               key={service}
-              className="flex items-center gap-2 p-3 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors dark:border-slate-600 dark:hover:bg-slate-700"
+              className="flex items-center gap-2 p-3 rounded-lg border border-neutral-200 hover:bg-neutral-50 cursor-pointer transition-colors dark:border-neutral-700 dark:hover:bg-neutral-800"
             >
               <input
                 type="checkbox"
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
                 checked={form.selectedServices.includes(service)}
                 onChange={() => toggleService(service)}
               />
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 {service}
               </span>
             </label>
@@ -197,11 +197,11 @@ export function ReceptionForm({
       </div>
 
       <div className="space-y-1">
-        <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">
+        <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 ml-1">
           Adicionales / Notas
         </label>
         <div className="relative group">
-          <div className="absolute left-3 top-4 text-slate-400 group-focus-within:text-blue-500 transition-colors">
+          <div className="absolute left-3 top-4 text-neutral-400 group-focus-within:text-red-500 transition-colors">
             <Wrench size={18} />
           </div>
           <textarea
@@ -211,7 +211,7 @@ export function ReceptionForm({
             onChange={(e) =>
               setForm({ ...form, additionalNotes: e.target.value })
             }
-            className="w-full pl-10 pr-4 py-3 bg-slate-50 border-none rounded-xl text-slate-900 font-medium placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+            className="w-full pl-10 pr-4 py-3 bg-neutral-50 border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 rounded-xl text-neutral-900 dark:text-white font-medium placeholder:text-neutral-400 focus:ring-2 focus:ring-red-500 transition-all resize-none"
           />
         </div>
       </div>
@@ -221,7 +221,7 @@ export function ReceptionForm({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl transition-all"
+            className="flex-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-bold py-3.5 rounded-xl transition-all"
           >
             Cancelar
           </button>
@@ -229,11 +229,11 @@ export function ReceptionForm({
         <button
           type="submit"
           className={`flex-1 font-bold py-3.5 rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-white
-             ${
-               initialData
-                 ? "bg-amber-500 hover:bg-amber-600 shadow-amber-500/20"
-                 : "bg-blue-600 hover:bg-blue-700 shadow-blue-500/20"
-             }
+              ${
+                initialData
+                  ? "bg-amber-500 hover:bg-amber-600 shadow-amber-500/20"
+                  : "bg-neutral-900 hover:bg-neutral-800 dark:bg-primary dark:hover:bg-red-700 shadow-neutral-900/20"
+              }
           `}
         >
           {initialData ? <Save size={20} /> : <PlusCircle size={20} />}

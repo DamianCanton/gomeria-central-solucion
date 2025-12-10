@@ -6,10 +6,10 @@ export default {
     extend: {
       colors: {
         // Custom premium colors
-        primary: "#3b82f6", // Blue-500
-        secondary: "#64748b", // Slate-500
-        dark: "#0f172a", // Slate-900
-        light: "#f8fafc", // Slate-50
+        primary: "#DC2626", // Red
+        secondary: "#000000", // Black
+        dark: "#171717", // Neutral-900
+        light: "#FFFFFF", // White
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],

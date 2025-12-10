@@ -29,19 +29,19 @@ export function OrderCard({
     "relative overflow-hidden rounded-2xl border transition-all duration-300";
   const variants = {
     admin:
-      "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md p-4",
-    display: "bg-slate-900 border-4 border-slate-600 p-10 shadow-2xl",
+      "bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700 shadow-sm hover:shadow-md p-4",
+    display: "bg-neutral-900 border-4 border-neutral-600 p-10 shadow-2xl",
   };
 
   const statusColors = {
     pending: "bg-yellow-500/20 text-yellow-400 border-yellow-500",
-    working: "bg-blue-500/20 text-blue-400 border-blue-500",
+    working: "bg-red-500/20 text-red-400 border-red-500",
     completed: "bg-green-500/20 text-green-400 border-green-500",
   };
 
   const statusBorderColors = {
     pending: "border-l-yellow-500",
-    working: "border-l-blue-500",
+    working: "border-l-red-500",
     completed: "border-l-green-500",
   };
 
@@ -62,17 +62,17 @@ export function OrderCard({
       {/* Header con hora/ID y estado */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-slate-400 text-lg font-bold">
+          <div className="flex items-center gap-2 text-neutral-400 text-lg font-bold">
             <Clock size={isDisplay ? 28 : 16} />
             <span className={isDisplay ? "text-2xl" : ""}>{formattedTime}</span>
           </div>
           {/* Short ID Display */}
           <div
             className={clsx(
-              "flex items-center gap-2 bg-slate-800 rounded-lg font-mono font-bold",
+              "flex items-center gap-2 bg-neutral-800 rounded-lg font-mono font-bold",
               isDisplay
-                ? "px-4 py-2 text-2xl text-slate-300"
-                : "px-2 py-1 text-xs text-slate-400"
+                ? "px-4 py-2 text-2xl text-neutral-300"
+                : "px-2 py-1 text-xs text-neutral-400"
             )}
           >
             <Hash size={isDisplay ? 20 : 12} />
@@ -110,8 +110,8 @@ export function OrderCard({
           className={clsx(
             "font-black tracking-tight mb-2",
             isDisplay
-              ? "text-7xl text-white bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 rounded-xl inline-block shadow-lg"
-              : "text-xl text-slate-900 dark:text-white"
+              ? "text-7xl text-white bg-gradient-to-r from-red-500 to-red-600 px-6 py-3 rounded-xl inline-block shadow-lg"
+              : "text-xl text-neutral-900 dark:text-white"
           )}
         >
           {order.plate.toUpperCase()}
@@ -123,16 +123,16 @@ export function OrderCard({
             size={isDisplay ? 36 : 18}
             className={
               isDisplay
-                ? "text-slate-400"
-                : "text-slate-700 dark:text-slate-200"
+                ? "text-neutral-400"
+                : "text-neutral-700 dark:text-neutral-200"
             }
           />
           <span
             className={clsx(
               "font-bold",
               isDisplay
-                ? "text-4xl text-slate-200"
-                : "text-base text-slate-700 dark:text-slate-200"
+                ? "text-4xl text-neutral-200"
+                : "text-base text-neutral-700 dark:text-neutral-200"
             )}
           >
             {order.model}
@@ -145,14 +145,14 @@ export function OrderCard({
         className={clsx(
           "rounded-xl",
           isDisplay
-            ? "bg-slate-800/80 p-8"
-            : "bg-slate-100 dark:bg-slate-950/50 p-3"
+            ? "bg-neutral-800/80 p-8"
+            : "bg-neutral-100 dark:bg-neutral-900/50 p-3"
         )}
       >
         {order.services && order.services.length > 0 ? (
           <div className="space-y-4">
             {isDisplay && (
-              <div className="text-xl font-bold text-slate-500 uppercase tracking-widest mb-4">
+              <div className="text-xl font-bold text-neutral-500 uppercase tracking-widest mb-4">
                 Servicios a Realizar
               </div>
             )}
@@ -161,7 +161,7 @@ export function OrderCard({
                 "space-y-2 font-bold",
                 isDisplay
                   ? "text-4xl text-white leading-relaxed"
-                  : "list-disc pl-5 text-sm text-slate-800 dark:text-slate-100"
+                  : "list-disc pl-5 text-sm text-neutral-800 dark:text-neutral-100"
               )}
             >
               {order.services.map((s) => (
@@ -170,7 +170,7 @@ export function OrderCard({
                   className={isDisplay ? "flex items-center gap-4" : ""}
                 >
                   {isDisplay && (
-                    <span className="text-blue-400 text-3xl">•</span>
+                    <span className="text-red-400 text-3xl">•</span>
                   )}
                   {s}
                 </li>
@@ -181,8 +181,8 @@ export function OrderCard({
                 className={clsx(
                   "flex items-start gap-3 border-t font-medium",
                   isDisplay
-                    ? "text-2xl text-yellow-300 pt-4 mt-4 border-slate-700"
-                    : "text-xs text-slate-600 dark:text-slate-400 pt-2 border-slate-300 dark:border-slate-700"
+                    ? "text-2xl text-yellow-300 pt-4 mt-4 border-neutral-700"
+                    : "text-xs text-neutral-600 dark:text-neutral-400 pt-2 border-neutral-300 dark:border-neutral-700"
                 )}
               >
                 <FileText
@@ -200,7 +200,7 @@ export function OrderCard({
               "font-bold",
               isDisplay
                 ? "text-4xl text-white leading-relaxed"
-                : "text-sm text-slate-900 dark:text-white"
+                : "text-sm text-neutral-900 dark:text-white"
             )}
           >
             {order.job}
@@ -212,8 +212,8 @@ export function OrderCard({
           className={clsx(
             "uppercase tracking-wider font-bold",
             isDisplay
-              ? "mt-6 pt-4 border-t border-slate-700 text-xl text-slate-400"
-              : "mt-4 text-xs text-slate-500 dark:text-slate-400"
+              ? "mt-6 pt-4 border-t border-neutral-700 text-xl text-neutral-400"
+              : "mt-4 text-xs text-neutral-500 dark:text-neutral-400"
           )}
         >
           Cliente: {order.clientName}
@@ -221,10 +221,10 @@ export function OrderCard({
       </div>
 
       {!isDisplay && (
-        <div className="flex gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+        <div className="flex gap-2 mt-4 pt-4 border-t border-neutral-100 dark:border-neutral-700">
           <button
             onClick={() => onEdit(order)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-neutral-600 hover:bg-neutral-50 transition-colors"
           >
             <Edit2 size={16} /> Editar
           </button>
@@ -236,7 +236,7 @@ export function OrderCard({
           </button>
           <button
             onClick={() => onComplete(order.id)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 transition-colors shadow-sm"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors shadow-sm"
           >
             <CheckCircle size={16} /> Listo
           </button>

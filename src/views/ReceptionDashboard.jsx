@@ -67,13 +67,13 @@ export function ReceptionDashboard() {
   const editingOrder = orders.find((o) => o.id === editingId);
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 p-6 font-sans transition-colors duration-500">
+    <div className="min-h-screen bg-neutral-100 dark:bg-black p-6 font-sans transition-colors duration-500">
       <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
-            Taller<span className="text-blue-600">Flow</span>
+          <h1 className="text-3xl font-black text-neutral-900 dark:text-white tracking-tighter">
+            Taller<span className="text-primary">Flow</span>
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 font-medium">
+          <p className="text-neutral-500 dark:text-neutral-400 font-medium">
             Panel de Recepción
           </p>
         </div>
@@ -81,7 +81,7 @@ export function ReceptionDashboard() {
         <div className="flex items-center gap-3">
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-700 dark:text-yellow-300 font-semibold shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 border border-slate-300 dark:border-slate-600"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700 text-neutral-700 dark:text-yellow-300 font-semibold shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 border border-neutral-300 dark:border-neutral-600"
             title={
               theme === "light" ? "Activar Modo Oscuro" : "Activar Modo Claro"
             }
@@ -97,7 +97,7 @@ export function ReceptionDashboard() {
           <Link
             to="/tv"
             target="_blank"
-            className="flex items-center gap-2 bg-slate-900 dark:bg-blue-600 text-white px-5 py-2.5 rounded-full font-bold hover:bg-slate-800 dark:hover:bg-blue-700 transition shadow-lg shadow-slate-900/20 dark:shadow-blue-500/20"
+            className="flex items-center gap-2 bg-neutral-900 dark:bg-primary text-white px-5 py-2.5 rounded-full font-bold hover:bg-neutral-800 dark:hover:bg-red-700 transition shadow-lg shadow-neutral-900/20"
           >
             <Monitor size={20} />
             Abrir TV Taller
@@ -114,7 +114,7 @@ export function ReceptionDashboard() {
             onCancel={handleCancelEdit}
           />
 
-          <div className="bg-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-500/20">
+          <div className="bg-neutral-900 dark:bg-primary rounded-2xl p-6 text-white shadow-lg shadow-neutral-900/20">
             <h3 className="font-bold text-lg mb-2">Autos en Espera</h3>
             <p className="text-5xl font-black">{activeOrders.length}</p>
           </div>
@@ -125,22 +125,22 @@ export function ReceptionDashboard() {
           {/* Search Bar */}
           <div className="relative">
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"
               size={20}
             />
             <input
               type="text"
               placeholder="Buscar por Patente o Cliente..."
-              className="w-full pl-12 pr-4 py-4 rounded-xl border-none shadow-sm text-slate-900 font-medium focus:ring-2 focus:ring-blue-500 dark:bg-slate-800 dark:text-white"
+              className="w-full pl-12 pr-4 py-4 rounded-xl border-none shadow-sm text-neutral-900 font-medium focus:ring-2 focus:ring-primary dark:bg-neutral-900 dark:text-white dark:placeholder-neutral-500"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             />
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
+            <h2 className="text-lg font-bold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider flex items-center gap-2">
               En Proceso{" "}
-              <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full">
+              <span className="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full">
                 {activeOrders.length}
               </span>
             </h2>
@@ -157,7 +157,7 @@ export function ReceptionDashboard() {
                 />
               ))}
               {activeOrders.length === 0 && (
-                <div className="col-span-full py-12 text-center text-slate-400 bg-white dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                <div className="col-span-full py-12 text-center text-neutral-400 bg-white dark:bg-neutral-900 rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700">
                   No hay autos en espera. Agrega uno nuevo.
                 </div>
               )}
@@ -165,8 +165,8 @@ export function ReceptionDashboard() {
           </div>
 
           {completedOrders.length > 0 && (
-            <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-700">
-              <h2 className="text-lg font-bold text-slate-500 uppercase tracking-wider mb-4">
+            <div className="mt-8 pt-8 border-t border-neutral-200 dark:border-neutral-700">
+              <h2 className="text-lg font-bold text-neutral-500 uppercase tracking-wider mb-4">
                 Completados Hoy
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
