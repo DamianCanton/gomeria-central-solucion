@@ -30,7 +30,8 @@ export function OrderCard({
   const variants = {
     admin:
       "bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700 shadow-sm hover:shadow-md p-4",
-    display: "bg-neutral-900 border-4 border-neutral-600 p-10 shadow-2xl",
+    display:
+      "bg-neutral-900 border-4 border-neutral-600 p-[1.5vh] shadow-2xl h-full flex flex-col",
   };
 
   const statusColors = {
@@ -56,26 +57,34 @@ export function OrderCard({
       className={twMerge(
         baseStyles,
         variants[variant],
-        isDisplay && `border-l-[12px] ${statusBorderColors[order.status]}`
+        isDisplay && `border-l-[8px] ${statusBorderColors[order.status]}`
       )}
     >
       {/* Header con hora/ID y estado */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-neutral-400 text-lg font-bold">
-            <Clock size={isDisplay ? 28 : 16} />
-            <span className={isDisplay ? "text-2xl" : ""}>{formattedTime}</span>
+      <div className="flex justify-between items-center mb-[0.8vh] flex-shrink-0">
+        <div className="flex items-center gap-[0.8vh]">
+          <div className="flex items-center gap-[0.5vh] text-neutral-400 font-bold">
+            <Clock
+              size={isDisplay ? "2vh" : 16}
+              className={isDisplay ? "w-[2vh] h-[2vh]" : ""}
+            />
+            <span className={isDisplay ? "text-[1.8vh]" : ""}>
+              {formattedTime}
+            </span>
           </div>
           {/* Short ID Display */}
           <div
             className={clsx(
-              "flex items-center gap-2 bg-neutral-800 rounded-lg font-mono font-bold",
+              "flex items-center gap-[0.5vh] bg-neutral-800 rounded-lg font-mono font-bold",
               isDisplay
-                ? "px-4 py-2 text-2xl text-neutral-300"
+                ? "px-[1vh] py-[0.5vh] text-[1.6vh] text-neutral-300"
                 : "px-2 py-1 text-xs text-neutral-400"
             )}
           >
-            <Hash size={isDisplay ? 20 : 12} />
+            <Hash
+              size={isDisplay ? "1.5vh" : 12}
+              className={isDisplay ? "w-[1.5vh] h-[1.5vh]" : ""}
+            />
             {order.displayId || "N/A"}
           </div>
         </div>
@@ -84,7 +93,7 @@ export function OrderCard({
         {isDisplay && (
           <div
             className={clsx(
-              "px-5 py-2 rounded-xl text-2xl font-black border-2 uppercase tracking-wide",
+              "px-[1.2vh] py-[0.5vh] rounded-lg text-[1.4vh] font-black border-2 uppercase tracking-wide",
               statusColors[order.status]
             )}
           >
@@ -105,33 +114,36 @@ export function OrderCard({
       </div>
 
       {/* Patente gigante */}
-      <div className="mb-6">
+      <div className={isDisplay ? "mb-[1vh] flex-shrink-0" : "mb-6"}>
         <h3
           className={clsx(
-            "font-black tracking-tight mb-2",
+            "font-black tracking-tight",
             isDisplay
-              ? "text-7xl text-white bg-gradient-to-r from-red-500 to-red-600 px-6 py-3 rounded-xl inline-block shadow-lg"
-              : "text-xl text-neutral-900 dark:text-white"
+              ? "text-[4vh] text-white bg-gradient-to-r from-red-500 to-red-600 px-[1.2vh] py-[0.6vh] rounded-lg inline-block shadow-lg leading-tight"
+              : "text-xl text-neutral-900 dark:text-white mb-2"
           )}
         >
           {order.plate.toUpperCase()}
         </h3>
         <div
-          className={clsx("flex items-center gap-3", isDisplay ? "mt-4" : "")}
+          className={clsx(
+            "flex items-center",
+            isDisplay ? "gap-[0.8vh] mt-[0.8vh]" : "gap-3"
+          )}
         >
           <Car
-            size={isDisplay ? 36 : 18}
-            className={
+            size={isDisplay ? "2.5vh" : 18}
+            className={clsx(
               isDisplay
-                ? "text-neutral-400"
+                ? "text-neutral-400 w-[2.5vh] h-[2.5vh]"
                 : "text-neutral-700 dark:text-neutral-200"
-            }
+            )}
           />
           <span
             className={clsx(
               "font-bold",
               isDisplay
-                ? "text-4xl text-neutral-200"
+                ? "text-[2.2vh] text-neutral-200"
                 : "text-base text-neutral-700 dark:text-neutral-200"
             )}
           >
@@ -145,51 +157,63 @@ export function OrderCard({
         className={clsx(
           "rounded-xl",
           isDisplay
-            ? "bg-neutral-800/80 p-8"
+            ? "bg-neutral-800/80 p-[1.2vh] flex-1 min-h-0 overflow-hidden flex flex-col"
             : "bg-neutral-100 dark:bg-neutral-900/50 p-3"
         )}
       >
         {order.services && order.services.length > 0 ? (
-          <div className="space-y-4">
+          <div
+            className={isDisplay ? "flex flex-col min-h-0 flex-1" : "space-y-4"}
+          >
             {isDisplay && (
-              <div className="text-xl font-bold text-neutral-500 uppercase tracking-widest mb-4">
+              <div className="text-[1.2vh] font-bold text-neutral-500 uppercase tracking-widest mb-[0.6vh] flex-shrink-0">
                 Servicios a Realizar
               </div>
             )}
             <ul
               className={clsx(
-                "space-y-2 font-bold",
+                "font-bold",
                 isDisplay
-                  ? "text-4xl text-white leading-relaxed"
-                  : "list-disc pl-5 text-sm text-neutral-800 dark:text-neutral-100"
+                  ? "text-[1.8vh] text-white leading-snug space-y-[0.4vh] overflow-auto flex-1 min-h-0"
+                  : "list-disc pl-5 text-sm text-neutral-800 dark:text-neutral-100 space-y-2"
               )}
             >
-              {order.services.map((s) => (
+              {order.services.slice(0, isDisplay ? 4 : undefined).map((s) => (
                 <li
                   key={s}
-                  className={isDisplay ? "flex items-center gap-4" : ""}
+                  className={isDisplay ? "flex items-center gap-[0.6vh]" : ""}
                 >
                   {isDisplay && (
-                    <span className="text-red-400 text-3xl">•</span>
+                    <span className="text-red-400 text-[1.6vh]">•</span>
                   )}
                   {s}
                 </li>
               ))}
+              {isDisplay && order.services.length > 4 && (
+                <li className="text-neutral-500 text-[1.4vh]">
+                  +{order.services.length - 4} más...
+                </li>
+              )}
             </ul>
             {order.notes && (
               <div
                 className={clsx(
-                  "flex items-start gap-3 border-t font-medium",
+                  "flex items-start border-t font-medium flex-shrink-0",
                   isDisplay
-                    ? "text-2xl text-yellow-300 pt-4 mt-4 border-neutral-700"
-                    : "text-xs text-neutral-600 dark:text-neutral-400 pt-2 border-neutral-300 dark:border-neutral-700"
+                    ? "text-[1.4vh] text-yellow-300 pt-[0.6vh] mt-[0.6vh] border-neutral-700 gap-[0.5vh]"
+                    : "text-xs text-neutral-600 dark:text-neutral-400 pt-2 border-neutral-300 dark:border-neutral-700 gap-3"
                 )}
               >
                 <FileText
-                  size={isDisplay ? 28 : 14}
-                  className="mt-1 flex-shrink-0"
+                  size={isDisplay ? "1.4vh" : 14}
+                  className={clsx(
+                    "mt-1 flex-shrink-0",
+                    isDisplay && "w-[1.4vh] h-[1.4vh]"
+                  )}
                 />
-                <span>{order.notes}</span>
+                <span className={isDisplay ? "line-clamp-1" : ""}>
+                  {order.notes}
+                </span>
               </div>
             )}
           </div>
@@ -199,7 +223,7 @@ export function OrderCard({
             className={clsx(
               "font-bold",
               isDisplay
-                ? "text-4xl text-white leading-relaxed"
+                ? "text-[2vh] text-white leading-snug"
                 : "text-sm text-neutral-900 dark:text-white"
             )}
           >
@@ -210,9 +234,9 @@ export function OrderCard({
         {/* Cliente */}
         <div
           className={clsx(
-            "uppercase tracking-wider font-bold",
+            "uppercase tracking-wider font-bold flex-shrink-0",
             isDisplay
-              ? "mt-6 pt-4 border-t border-neutral-700 text-xl text-neutral-400"
+              ? "mt-[0.8vh] pt-[0.6vh] border-t border-neutral-700 text-[1.2vh] text-neutral-400"
               : "mt-4 text-xs text-neutral-500 dark:text-neutral-400"
           )}
         >

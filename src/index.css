@@ -2,3 +2,29 @@
 
 /* Habilitar dark mode basado en clase .dark en el elemento html */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom scrollbar para la vista de TV */
+.scrollbar-tv::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scrollbar-tv::-webkit-scrollbar-track {
+  background: #262626;
+  border-radius: 6px;
+}
+
+.scrollbar-tv::-webkit-scrollbar-thumb {
+  background: #ef4444;
+  border-radius: 6px;
+  border: 2px solid #262626;
+}
+
+.scrollbar-tv::-webkit-scrollbar-thumb:hover {
+  background: #dc2626;
+}
+
+/* Firefox scrollbar */
+.scrollbar-tv {
+  scrollbar-width: thin;
+  scrollbar-color: #ef4444 #262626;
+}
