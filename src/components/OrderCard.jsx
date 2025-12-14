@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import {
@@ -8,16 +9,24 @@ import {
   Car,
   Hash,
   FileText,
+  Hourglass,
+  Wrench,
+  Package,
+  ChevronDown,
 } from "lucide-react";
+import { timeAgo } from "../utils/time";
+import { ORDER_STATUSES } from "../context/OrderContext";
 
 export function OrderCard({
   order,
   onEdit,
   onDelete,
   onComplete,
+  onChangeStatus,
   variant = "admin",
 }) {
   const isDisplay = variant === "display";
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
 
   // Format date safely
   const formattedTime = new Date(order.createdAt).toLocaleTimeString([], {
@@ -34,22 +43,58 @@ export function OrderCard({
       "bg-neutral-900 border-4 border-neutral-600 p-[1.5vh] shadow-2xl h-full flex flex-col",
   };
 
-  const statusColors = {
-    pending: "bg-yellow-500/20 text-yellow-400 border-yellow-500",
-    working: "bg-red-500/20 text-red-400 border-red-500",
-    completed: "bg-green-500/20 text-green-400 border-green-500",
+  // Enhanced status config with icons
+  const statusConfig = {
+    waiting: {
+      bg: "bg-yellow-500/20",
+      text: "text-yellow-400",
+      border: "border-yellow-500",
+      borderLeft: "border-l-yellow-500",
+      icon: Hourglass,
+      label: "En Espera",
+    },
+    pending: {
+      bg: "bg-yellow-500/20",
+      text: "text-yellow-400",
+      border: "border-yellow-500",
+      borderLeft: "border-l-yellow-500",
+      icon: Hourglass,
+      label: "Pendiente",
+    },
+    working: {
+      bg: "bg-red-500/20",
+      text: "text-red-400",
+      border: "border-red-500",
+      borderLeft: "border-l-red-500",
+      icon: Wrench,
+      label: "En Proceso",
+    },
+    parts: {
+      bg: "bg-orange-500/20",
+      text: "text-orange-400",
+      border: "border-orange-500",
+      borderLeft: "border-l-orange-500",
+      icon: Package,
+      label: "Esperando Repuestos",
+    },
+    completed: {
+      bg: "bg-green-500/20",
+      text: "text-green-400",
+      border: "border-green-500",
+      borderLeft: "border-l-green-500",
+      icon: CheckCircle,
+      label: "Completado",
+    },
   };
 
-  const statusBorderColors = {
-    pending: "border-l-yellow-500",
-    working: "border-l-red-500",
-    completed: "border-l-green-500",
-  };
+  const currentStatus = statusConfig[order.status] || statusConfig.waiting;
+  const StatusIcon = currentStatus.icon;
 
-  const statusLabels = {
-    pending: "Pendiente",
-    working: "En Proceso",
-    completed: "Listo",
+  const handleStatusChange = (newStatus) => {
+    if (onChangeStatus) {
+      onChangeStatus(order.id, newStatus);
+    }
+    setShowStatusMenu(false);
   };
 
   return (
@@ -57,9 +102,11 @@ export function OrderCard({
       className={twMerge(
         baseStyles,
         variants[variant],
-        isDisplay && `border-l-[8px] ${statusBorderColors[order.status]}`
+        isDisplay && `border-l-[8px] ${currentStatus.borderLeft}`
       )}
     >
+      {/* New badge - ahora junto al ID para no superponerse */}
+
       {/* Header con hora/ID y estado */}
       <div className="flex justify-between items-center mb-[0.8vh] flex-shrink-0">
         <div className="flex items-center gap-[0.8vh]">
@@ -87,34 +134,84 @@ export function OrderCard({
             />
             {order.displayId || "N/A"}
           </div>
+          {/* Time ago indicator */}
+          {!isDisplay && (
+            <span className="text-xs text-neutral-400 font-medium">
+              {timeAgo(order.createdAt)}
+            </span>
+          )}
         </div>
 
         {/* Estado visible en modo display */}
         {isDisplay && (
           <div
             className={clsx(
-              "px-[1.2vh] py-[0.5vh] rounded-lg text-[1.4vh] font-black border-2 uppercase tracking-wide",
-              statusColors[order.status]
+              "flex items-center gap-[0.6vh] px-[1.2vh] py-[0.5vh] rounded-lg text-[1.4vh] font-black border-2 uppercase tracking-wide",
+              currentStatus.bg,
+              currentStatus.text,
+              currentStatus.border
             )}
           >
-            {statusLabels[order.status]}
+            <StatusIcon className="w-[1.4vh] h-[1.4vh]" />
+            {currentStatus.label}
           </div>
         )}
 
         {!isDisplay && (
-          <div
-            className={clsx(
-              "px-2 py-0.5 rounded-full text-xs font-bold border",
-              statusColors[order.status]
+          <div className="relative">
+            <button
+              onClick={() => setShowStatusMenu(!showStatusMenu)}
+              className={clsx(
+                "flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-bold border transition-colors",
+                currentStatus.bg,
+                currentStatus.text,
+                currentStatus.border,
+                "hover:opacity-80"
+              )}
+            >
+              <StatusIcon size={14} />
+              {currentStatus.label}
+              <ChevronDown size={12} />
+            </button>
+
+            {/* Status dropdown menu */}
+            {showStatusMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setShowStatusMenu(false)}
+                />
+                <div className="absolute right-0 top-full mt-1 bg-white dark:bg-neutral-800 rounded-xl shadow-xl border border-neutral-200 dark:border-neutral-700 py-1 z-20 min-w-[160px]">
+                  {Object.entries(statusConfig)
+                    .filter(([key]) => key !== "pending")
+                    .map(([key, config]) => {
+                      const Icon = config.icon;
+                      return (
+                        <button
+                          key={key}
+                          onClick={() => handleStatusChange(key)}
+                          className={clsx(
+                            "w-full flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors",
+                            order.status === key
+                              ? "bg-neutral-100 dark:bg-neutral-700"
+                              : "hover:bg-neutral-50 dark:hover:bg-neutral-700",
+                            config.text
+                          )}
+                        >
+                          <Icon size={16} />
+                          {config.label}
+                        </button>
+                      );
+                    })}
+                </div>
+              </>
             )}
-          >
-            {statusLabels[order.status].toUpperCase()}
           </div>
         )}
       </div>
 
       {/* Patente gigante */}
-      <div className={isDisplay ? "mb-[1vh] flex-shrink-0" : "mb-6"}>
+      <div className={isDisplay ? "mb-[1vh] flex-shrink-0" : "mb-4"}>
         <h3
           className={clsx(
             "font-black tracking-tight",
@@ -157,7 +254,7 @@ export function OrderCard({
         className={clsx(
           "rounded-xl",
           isDisplay
-            ? "bg-neutral-800/80 p-[1.2vh] flex-1 min-h-0 overflow-hidden flex flex-col"
+            ? "bg-neutral-800/80 p-[1.2vh] flex flex-col"
             : "bg-neutral-100 dark:bg-neutral-900/50 p-3"
         )}
       >
@@ -174,11 +271,11 @@ export function OrderCard({
               className={clsx(
                 "font-bold",
                 isDisplay
-                  ? "text-[1.8vh] text-white leading-snug space-y-[0.4vh] overflow-auto flex-1 min-h-0"
+                  ? "text-[1.8vh] text-white leading-snug space-y-[0.4vh]"
                   : "list-disc pl-5 text-sm text-neutral-800 dark:text-neutral-100 space-y-2"
               )}
             >
-              {order.services.slice(0, isDisplay ? 4 : undefined).map((s) => (
+              {order.services.map((s) => (
                 <li
                   key={s}
                   className={isDisplay ? "flex items-center gap-[0.6vh]" : ""}
@@ -189,11 +286,6 @@ export function OrderCard({
                   {s}
                 </li>
               ))}
-              {isDisplay && order.services.length > 4 && (
-                <li className="text-neutral-500 text-[1.4vh]">
-                  +{order.services.length - 4} más...
-                </li>
-              )}
             </ul>
             {order.notes && (
               <div
@@ -242,28 +334,37 @@ export function OrderCard({
         >
           Cliente: {order.clientName}
         </div>
+
+        {/* Time ago for display variant */}
+        {isDisplay && (
+          <div className="text-[1.2vh] text-neutral-500 font-medium mt-[0.4vh]">
+            {timeAgo(order.createdAt)}
+          </div>
+        )}
       </div>
 
       {!isDisplay && (
         <div className="flex gap-2 mt-4 pt-4 border-t border-neutral-100 dark:border-neutral-700">
           <button
             onClick={() => onEdit(order)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-neutral-600 hover:bg-neutral-50 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
           >
             <Edit2 size={16} /> Editar
           </button>
           <button
             onClick={() => onDelete(order.id)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             <Trash2 size={16} /> Borrar
           </button>
-          <button
-            onClick={() => onComplete(order.id)}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition-colors shadow-sm"
-          >
-            <CheckCircle size={16} /> Listo
-          </button>
+          {order.status !== "completed" && (
+            <button
+              onClick={() => onComplete(order.id)}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-medium text-white bg-neutral-900 dark:bg-green-600 hover:bg-neutral-800 dark:hover:bg-green-700 transition-colors shadow-sm"
+            >
+              <CheckCircle size={16} /> Listo
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -10,6 +10,22 @@ export const useOrder = () => {
   return context;
 };
 
+// Estados disponibles para las órdenes
+export const ORDER_STATUSES = {
+  waiting: { label: "En Espera", color: "yellow" },
+  working: { label: "En Proceso", color: "red" },
+  parts: { label: "Esperando Repuestos", color: "orange" },
+  completed: { label: "Completado", color: "green" },
+};
+
+// Helper para obtener el próximo displayId secuencial
+const getNextDisplayId = () => {
+  const lastId = parseInt(localStorage.getItem("workshop_last_id") || "0", 10);
+  const nextId = lastId + 1;
+  localStorage.setItem("workshop_last_id", nextId.toString());
+  return nextId.toString().padStart(4, "0");
+};
+
 export const OrderProvider = ({ children }) => {
   const [orders, setOrders] = useState(() => {
     const saved = localStorage.getItem("workshop_orders");
@@ -18,20 +34,14 @@ export const OrderProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("workshop_orders", JSON.stringify(orders));
-    // REMOVED manual dispatch to prevent infinite loop.
-    // Typescript/React state changes handle local update.
-    // Native 'storage' event handles cross-tab update.
   }, [orders]);
 
   // Sync across tabs
   useEffect(() => {
     const handleStorageChange = (e) => {
-      // Only react if the specific key changed
       if (e.key === "workshop_orders") {
         const saved = localStorage.getItem("workshop_orders");
         if (saved) {
-          // Basic check to avoid re-renders if data is same could be done here,
-          // but 'storage' event only fires on other tabs usually.
           setOrders(JSON.parse(saved));
         }
       }
@@ -44,13 +54,19 @@ export const OrderProvider = ({ children }) => {
   const addOrder = (orderData) => {
     const newOrder = {
       id: crypto.randomUUID(),
-      displayId: Math.floor(Math.random() * 9000 + 1000).toString(), // Random 4-digit ID
-      status: "pending",
+      displayId: getNextDisplayId(),
+      status: "waiting",
       createdAt: new Date().toISOString(),
+      statusHistory: [
+        {
+          status: "waiting",
+          timestamp: new Date().toISOString(),
+        },
+      ],
       ...orderData,
-      // orderData should now contain { model, plate, clientName, job, services: [], notes: '' }
     };
     setOrders((prev) => [newOrder, ...prev]);
+    return newOrder;
   };
 
   const updateOrder = (id, updates) => {
@@ -63,13 +79,40 @@ export const OrderProvider = ({ children }) => {
     setOrders((prev) => prev.filter((order) => order.id !== id));
   };
 
+  const changeStatus = (id, newStatus) => {
+    setOrders((prev) =>
+      prev.map((order) => {
+        if (order.id !== id) return order;
+        return {
+          ...order,
+          status: newStatus,
+          statusHistory: [
+            ...(order.statusHistory || []),
+            {
+              status: newStatus,
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        };
+      })
+    );
+  };
+
   const completeOrder = (id) => {
-    updateOrder(id, { status: "completed" });
+    changeStatus(id, "completed");
   };
 
   return (
     <OrderContext.Provider
-      value={{ orders, addOrder, updateOrder, deleteOrder, completeOrder }}
+      value={{
+        orders,
+        addOrder,
+        updateOrder,
+        deleteOrder,
+        changeStatus,
+        completeOrder,
+        ORDER_STATUSES,
+      }}
     >
       {children}
     </OrderContext.Provider>
